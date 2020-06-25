@@ -3,6 +3,7 @@ from Acquisition import aq_parent
 from collections import namedtuple
 from DateTime.interfaces import DateTimeError
 from DateTime import DateTime
+from plone import api
 from plone.app.layout.navigation.root import getNavigationRoot
 from plone.registry.interfaces import IRegistry
 from plone.uuid.interfaces import IUUID
@@ -304,7 +305,18 @@ def _pathByRoot(root, context, row):
         values = getPathByUID(context, values)
     # take care of absolute paths without root
     if not values.startswith(root + '/') and values != root:
-        values = root + values
+        qi = api.portal.get_tool('portal_quickinstaller')
+        pam = qi.isProductInstalled('plone.app.multilingual')
+        rlist = root.split('/')
+        # workaround for relateditems widget query path if PAM is enabled
+        # root is /Plone/en, values is /Plone/folder without lang folder
+        # combined, become /Plone/en/Plone/folder; removed extra instance
+        if pam and len(rlist)>=3:
+            vlist = values.split('/')
+            fixed = rlist + list(set(vlist) - set(rlist))
+            values = '/'.join(fixed)
+        else:
+            values = root + values
     query = {}
     if depth is not None:
         query['depth'] = depth
