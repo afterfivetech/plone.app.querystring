@@ -313,8 +313,11 @@ def _pathByRoot(root, context, row):
         # combined, become /Plone/en/Plone/folder; removed extra instance
         if pam and len(rlist)>=3:
             vlist = values.split('/')
-            fixed = rlist + list(set(vlist) - set(rlist))
-            values = '/'.join(fixed)
+            if len(vlist)==3 and values.endswith('/'):
+                values = '/'.join(vlist)
+            else:
+                fixed = rlist + list(set(vlist) - set(rlist))
+                values = '/'.join(fixed)
         else:
             values = root + values
     query = {}
