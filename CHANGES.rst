@@ -8,6 +8,16 @@ Changelog
 
 .. towncrier release notes start
 
+1.4.13+afive.dev1 (2020-07-29)
+------------------------------
+
+Bug fixes:
+
+- for case when nav root needs to be selected; ex. in nav portlet
+  [holden]
+- workaround for relateditem widget path on sites with PAM
+  [holden]
+
 1.4.13 (2020-04-20)
 -------------------
 
